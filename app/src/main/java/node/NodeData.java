@@ -20,4 +20,5 @@ public interface NodeData {
     public Overlay getOverlay();
     public int getNumberOfConnections();
     public ArrayList<Connection> getAllConnections();
+    public String getLocalHost();
 }

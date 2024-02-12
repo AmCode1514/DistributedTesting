@@ -3,6 +3,8 @@ package registry;
 import transport.Connection;
 import transport.Server;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -78,5 +80,15 @@ public class RegistryData implements NodeData {
             returnedListOfConnections.add(connectionList.get(key));
         }
         return returnedListOfConnections;
+    }
+    @Override
+    public String getLocalHost() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
