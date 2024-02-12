@@ -6,7 +6,7 @@ import java.io.IOException;
 
 import node.Event;
 import node.NodeData;
-import registry.RegisteredNodeData;
+import node.RegisteredNodeData;
 import transport.Connection;
 
 public class RegistrationRequest implements Event {
@@ -19,11 +19,6 @@ public class RegistrationRequest implements Event {
         this. ipAddress = ipAddress;
         this.portNumber = portNumber;
         //this.bytes = bytes;
-    }
-    @Override
-    public byte[] getBytes() {
-        //this method is unnecessary at this time
-        return null;
     }
     @Override
     public int getRequestType() {
@@ -39,13 +34,12 @@ public class RegistrationRequest implements Event {
         String additionalInformation;
         if (conn != null) {
             statusCode = 1;
-            additionalInformation = "Connection established, all good";
+            additionalInformation = "Connection established, all good. There are " + data.getNumberOfConnections() + " other connections";
         }
         else {
             statusCode = 0;
             additionalInformation = "Connection fetch failed, if you see this message there has been big boo boo";
         }
-        System.out.println(additionalInformation);
         RegisteredNodeData nodeDataForOverlay = new RegisteredNodeData(conn, ipAddress, portNumber);
         data.getOverlay().addRegisteredNode(nodeDataForOverlay);
         RegistrationResponse response = new RegistrationResponse(2, conn.getIPAddress(), conn.getPortNumber(), statusCode, additionalInformation);

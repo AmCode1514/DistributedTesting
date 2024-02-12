@@ -1,7 +1,6 @@
 package node;
 
 public interface Event {
-    public byte[] getBytes();
     public int getRequestType();
     public String getIPAddress();
     public int getPort();

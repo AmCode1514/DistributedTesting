@@ -47,6 +47,7 @@ public class EventFactory {
         switch(requestType) {
             case 1: return new RegistrationRequest(requestType, ipAddress, portNumber);
             case 2: return new RegistrationResponse(requestType, ipAddress, portNumber, remainingData);
+            case 3: return new MessagingNodesListRequest(requestType, ipAddress, portNumber, remainingData);
         }
         return null;
     }

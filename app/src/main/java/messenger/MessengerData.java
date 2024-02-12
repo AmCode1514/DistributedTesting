@@ -3,10 +3,11 @@ package messenger;
 import transport.Connection;
 import transport.Server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import node.NodeData;
-import registry.Overlay;
+import node.Overlay;
 import transport.TCPSend;
 
 public class MessengerData implements NodeData {
@@ -15,6 +16,7 @@ public class MessengerData implements NodeData {
     Server primaryServerInstance;
     int localServerPort;
     String localIPAddress;
+    Overlay overlay = new Overlay();
 
     HashMap<String,Connection> connectionList = new HashMap<String,Connection>();
 
@@ -72,5 +74,17 @@ public class MessengerData implements NodeData {
     public Overlay getOverlay() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Overlay not available, this is a messengerData node");
+    }
+    @Override
+    public ArrayList<Connection> getAllConnections() {
+        ArrayList<Connection> returnedListOfConnections = new ArrayList<Connection>();
+        for (String key : connectionList.keySet()) {
+            returnedListOfConnections.add(connectionList.get(key));
+        }
+        return returnedListOfConnections;
+    }
+    @Override
+    public int getNumberOfConnections() {
+        return connectionList.size();
     }
 }
