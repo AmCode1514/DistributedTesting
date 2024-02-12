@@ -3,6 +3,8 @@ package messenger;
 import transport.Connection;
 import transport.Server;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -17,6 +19,7 @@ public class MessengerData implements NodeData {
     int localServerPort;
     String localIPAddress;
     Overlay overlay = new Overlay();
+    String localHost;
 
     HashMap<String,Connection> connectionList = new HashMap<String,Connection>();
 
@@ -72,8 +75,7 @@ public class MessengerData implements NodeData {
     }
     @Override
     public Overlay getOverlay() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Overlay not available, this is a messengerData node");
+        return overlay;
     }
     @Override
     public ArrayList<Connection> getAllConnections() {
@@ -86,5 +88,15 @@ public class MessengerData implements NodeData {
     @Override
     public int getNumberOfConnections() {
         return connectionList.size();
+    }
+    @Override
+    public String getLocalHost() {
+        try {
+            return InetAddress.getLocalHost().getHostName();
+        }
+        catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

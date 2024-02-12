@@ -1,6 +1,8 @@
 package messenger;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import node.NodeData;
 import node.requests.RegistrationRequest;
