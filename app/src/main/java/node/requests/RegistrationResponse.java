@@ -32,11 +32,6 @@ public class RegistrationResponse implements Event {
         this.additionalInformation = additionalInformation;
     }
     @Override
-    @Deprecated
-    public byte[] getBytes() {
-        return null;
-    }
-    @Override
     public int getRequestType() {
         return requestType;
     }

@@ -3,9 +3,11 @@ package registry;
 import transport.Connection;
 import transport.Server;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import node.NodeData;
+import node.Overlay;
 import transport.TCPReceive;
 import transport.TCPSend;
 
@@ -64,5 +66,17 @@ public class RegistryData implements NodeData {
     @Override
     public Overlay getOverlay() {
         return overlay;
+    }
+    @Override
+    public int getNumberOfConnections() {
+        return connectionList.size();
+    }
+    @Override
+    public ArrayList<Connection> getAllConnections() {
+        ArrayList<Connection> returnedListOfConnections = new ArrayList<Connection>();
+        for (String key : connectionList.keySet()) {
+            returnedListOfConnections.add(connectionList.get(key));
+        }
+        return returnedListOfConnections;
     }
 }

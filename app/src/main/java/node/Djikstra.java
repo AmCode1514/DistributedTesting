@@ -1,4 +1,4 @@
-package registry;
+package node;
 
 public class Djikstra {
     
