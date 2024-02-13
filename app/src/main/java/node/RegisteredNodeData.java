@@ -5,14 +5,11 @@ import java.util.HashMap;
 
 import transport.Connection;
 import transport.TCPReceive;
-
 public class RegisteredNodeData {
     Connection conn;
     String registeredNodeIP; 
     int registeredNodeServerPort;
-    //ArrayList<Integer> linkWeights = new ArrayList<Integer>();
-    //ArrayList<RegisteredNodeData> neighborNodes = new ArrayList<RegisteredNodeData>();
-    HashMap<RegisteredNodeData, Integer> neighborNodesAndWeights = new HashMap<RegisteredNodeData, Integer>();
+    HashMap<String, Integer> neighborNodesAndWeights = new HashMap<String, Integer>();
     boolean connected;
     public RegisteredNodeData(Connection conn, String registeredNodeIP, int registeredNodeServerPort) {
         this.conn = conn;
@@ -28,7 +25,24 @@ public class RegisteredNodeData {
     public boolean hasConnection() {
         return connected;
     }
-    public void addNeighbor(RegisteredNodeData neighborNode, int linkWeight) {
+    public void addNeighbor(String neighborNode, int linkWeight) {
         neighborNodesAndWeights.put(neighborNode, linkWeight);
+    }
+    public int getNumberOfLinks() {
+        return neighborNodesAndWeights.size();
+    }
+    public String getIP() {
+        return registeredNodeIP;
+    }
+    public int getPort() {
+        return registeredNodeServerPort;
+    }
+    public boolean isNeighbor(String neighbor) {
+        if (neighborNodesAndWeights.containsKey(neighbor)) {
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 }

@@ -10,9 +10,9 @@ import node.RegisteredNodeData;
 import transport.Connection;
 
 public class RegistrationRequest implements Event {
-    private int requestType;
-    private String ipAddress;
-    private int portNumber;
+    private final int requestType;
+    private final String ipAddress;
+    private final int portNumber;
     
     public RegistrationRequest(int requestType, String ipAddress, int portNumber) {
         this.requestType = requestType;

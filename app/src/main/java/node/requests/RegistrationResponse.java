@@ -11,9 +11,9 @@ import node.Event;
 import node.NodeData;
 public class RegistrationResponse implements Event {
 
-    private int requestType;
-    private String ipAddress;
-    private int portNumber;
+    private final int requestType;
+    private final String ipAddress;
+    private final int portNumber;
     private int statusCode;
     private String additionalInformation;
     //constructor for rebuilding

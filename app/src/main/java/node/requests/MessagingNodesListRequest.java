@@ -14,9 +14,9 @@ import transport.Connection;
 
 public class MessagingNodesListRequest implements Event {
 
-    private int requestType;
-    private String ipAddress;
-    private int portNumber;
+    private final int requestType;
+    private final String ipAddress;
+    private final int portNumber;
     private String peerMessagingList;
     private int numberOfPeers;
 
