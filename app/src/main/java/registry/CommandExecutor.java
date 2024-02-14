@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 import node.NodeData;
@@ -31,7 +32,7 @@ public class CommandExecutor {
                     case "list-messaging-nodes": 
                     break;
                     case "setup-overlay number-of-connections": 
-                    break;
+                    linkWeightsRequestStringGenerate();
                     case "send-overlay-link-weights":
                         int numberOfLinks = Integer.valueOf(command[1]);
                         System.out.println("Attempting to send overlay");
@@ -66,5 +67,27 @@ public class CommandExecutor {
         String output = build.toString();
         System.out.println(output);
         return output;
+    }
+    public void generateMessagingNodesList() {
+        HashMap<String,ArrayList<String>> unneededConnections = new HashMap<String,ArrayList<String>>();
+        ArrayList<String> messagingListPayloads = new ArrayList<String>();
+        for (int i = 0; i < overlay.size(); ++i) {
+            String ip = overlay.get(i).getIP();
+            unneededConnections.put(ip, new ArrayList<>());
+        }
+        for (int i = 0; i < unneededConnections.size(); ++i) {
+            RegisteredNodeData data = overlay.get(i);
+            String payload = "";
+            for (String key : data.getNeighborNodesMapKeys()) {
+                if (!unneededConnections.get(data.getIP()).contains(key)) {
+                    payload += String.format("%s/%s/", key, overlay.getByIp(key).getPort());
+                    unneededConnections.get(key).add(data.getIP());
+                }
+            }
+            if (!payload.equals("")) {
+                messagingListPayloads.add(payload);
+            }
+        }
+
     }
 }

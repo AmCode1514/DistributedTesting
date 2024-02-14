@@ -20,7 +20,8 @@ public class Overlay {
     }
     public boolean containsIP(String ip) {
         for (int i = 0; i < registeredNodeInformation.size(); ++i) {
-            if (registeredNodeInformation.get(i).getIP() == ip) {
+            //System.out.println("Compared IP " + ip + " Found ip " + registeredNodeInformation.get(i).getIP());
+            if (registeredNodeInformation.get(i).getIP().equals(ip)) {
                 return true;
             }
         }
@@ -28,7 +29,7 @@ public class Overlay {
     }
     public RegisteredNodeData getByIp(String ip) {
         for (int i = 0; i < registeredNodeInformation.size(); ++i) {
-            if (registeredNodeInformation.get(i).getIP() == ip) {
+            if (registeredNodeInformation.get(i).getIP().equals(ip)) {
                 return registeredNodeInformation.get(i);
             }
         }
