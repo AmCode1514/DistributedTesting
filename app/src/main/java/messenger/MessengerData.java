@@ -38,7 +38,7 @@ public class MessengerData implements NodeData {
         connectionList.remove(ipAddress);
     }
     @Override
-    public void addConnection(Connection currConnection) {
+    public synchronized void addConnection(Connection currConnection) {
         if (currConnection.getIPAddress().contains(".cs.colostate.edu")) {
             String scrubbedDomain = currConnection.getIPAddress().replace(".cs.colostate.edu", "");
             System.out.println("Messenger Scrubbed domain string: " + scrubbedDomain);
@@ -49,11 +49,11 @@ public class MessengerData implements NodeData {
         connectionList.put(currConnection.getIPAddress(), currConnection);
     }
     @Override
-    public Connection getConnection(String ipAddress) {
+    public synchronized Connection getConnection(String ipAddress) {
         return connectionList.get(ipAddress);
     }
     @Override
-    public TCPSend getTCPSend() {
+    public synchronized TCPSend getTCPSend() {
         return sender;
     }
     @Override
@@ -78,7 +78,7 @@ public class MessengerData implements NodeData {
         return overlay;
     }
     @Override
-    public ArrayList<Connection> getAllConnections() {
+    public synchronized ArrayList<Connection> getAllConnections() {
         ArrayList<Connection> returnedListOfConnections = new ArrayList<Connection>();
         for (String key : connectionList.keySet()) {
             returnedListOfConnections.add(connectionList.get(key));

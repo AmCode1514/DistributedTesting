@@ -50,7 +50,10 @@ public class MessagingNodesListRequest implements Event {
     @Override
     public void OnEvent(NodeData data) {
         String[] peerMessagingArray = peerMessagingList.split("/");
-        for(int i = 0; i < numberOfPeers; i = i + 2) {
+        for (String t : peerMessagingArray) {
+            System.out.println(t);
+        }
+        for(int i = 0; i < peerMessagingArray.length; i = i + 2) {
             String ipAddress = peerMessagingArray[i];
             int portNumber = Integer.valueOf(peerMessagingArray[i+1]);
             data.getServer().establishConnection(ipAddress, portNumber);
