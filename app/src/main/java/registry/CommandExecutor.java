@@ -11,6 +11,7 @@ import node.NodeData;
 import node.Overlay;
 import node.RegisteredNodeData;
 import node.requests.LinkWeightsRequest;
+import node.requests.MessagingNodesListRequest;
 import transport.Connection;
 
 public class CommandExecutor {
@@ -31,14 +32,16 @@ public class CommandExecutor {
                     break;
                     case "list-messaging-nodes": 
                     break;
-                    case "setup-overlay number-of-connections": 
-                    linkWeightsRequestStringGenerate();
+                    case "setup-overlay": 
+                    int numberOfConnections = Integer.valueOf(command[1]);
+                    System.out.println("Attempting to send overlay");
+                    RegistryLinkGenerator gen = new RegistryLinkGenerator(overlay);
+                    gen.generateLinks(numberOfConnections);
+                    sendMessagingNodesList();
+                    break;
                     case "send-overlay-link-weights":
-                        int numberOfLinks = Integer.valueOf(command[1]);
-                        System.out.println("Attempting to send overlay");
-                        RegistryLinkGenerator gen = new RegistryLinkGenerator(overlay);
-                        gen.generateLinks(numberOfLinks);
                         String nodeAndLinksInformation = linkWeightsRequestStringGenerate();
+                        int numberOfLinks = 0;
                         for (Connection conn : nodeReference.getAllConnections()) {
                             LinkWeightsRequest eventToSend = new LinkWeightsRequest(4, conn.getIPAddress(),conn.getPortNumber(),numberOfLinks,nodeAndLinksInformation);
                             nodeReference.getTCPSend().sendEvent(eventToSend, conn);
@@ -68,9 +71,9 @@ public class CommandExecutor {
         System.out.println(output);
         return output;
     }
-    public void generateMessagingNodesList() {
+    public void sendMessagingNodesList() {
         HashMap<String,ArrayList<String>> unneededConnections = new HashMap<String,ArrayList<String>>();
-        ArrayList<String> messagingListPayloads = new ArrayList<String>();
+        //ArrayList<String> messagingListPayloads = new ArrayList<String>();
         for (int i = 0; i < overlay.size(); ++i) {
             String ip = overlay.get(i).getIP();
             unneededConnections.put(ip, new ArrayList<>());
@@ -84,8 +87,12 @@ public class CommandExecutor {
                     unneededConnections.get(key).add(data.getIP());
                 }
             }
-            if (!payload.equals("")) {
-                messagingListPayloads.add(payload);
+            if (payload.equals("")) {
+            }
+            else {
+            System.out.println(payload);
+            MessagingNodesListRequest eventToSend = new MessagingNodesListRequest(3, data.getIP(), data.getPort(), payload);
+            nodeReference.getTCPSend().sendEvent(eventToSend,nodeReference.getConnection(data.getIP()));
             }
         }
 

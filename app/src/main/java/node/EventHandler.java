@@ -43,7 +43,9 @@ public class EventHandler extends Thread {
                     eventList.wait();
                     // while the list isn't empty then process event and remove it from list.
                     while(eventList.size() != 0) {
-                        eventList.pop().OnEvent(nodeData);
+                        synchronized(nodeData) {
+                            eventList.pop().OnEvent(nodeData);
+                        }
                     }
                 }
             }
