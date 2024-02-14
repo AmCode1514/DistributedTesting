@@ -80,7 +80,7 @@ public class CommandExecutor {
             String payload = "";
             for (String key : data.getNeighborNodesMapKeys()) {
                 if (!unneededConnections.get(data.getIP()).contains(key)) {
-                    payload += String.format("%s/%s/", key, overlay.getByIp(key).getPort());
+                    payload += String.format("%s/%s/", key, data.getNeighbor(key).getPort());
                     unneededConnections.get(key).add(data.getIP());
                 }
             }

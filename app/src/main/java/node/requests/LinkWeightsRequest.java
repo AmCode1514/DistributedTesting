@@ -9,6 +9,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import node.Event;
+import node.Link;
 import node.NodeData;
 import node.RegisteredNodeData;
 
@@ -116,8 +117,8 @@ public class LinkWeightsRequest implements Event {
                     host2 = new RegisteredNodeData(hostname2);
                     data.getOverlay().addRegisteredNode(host2);
                 }
-                host1.addNeighbor(hostname2, weight);
-                host2.addNeighbor(hostname1, weight);
+                host1.addNeighbor(new Link(host2, weight));
+                host2.addNeighbor(new Link(host1, weight));
             }
         }
         data.getOverlay().printNodesAndLinks();
