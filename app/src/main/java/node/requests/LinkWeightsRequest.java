@@ -93,8 +93,10 @@ public class LinkWeightsRequest implements Event {
             int weight = Integer.valueOf(parsedLinks[i+2]);
             RegisteredNodeData host1;
             RegisteredNodeData host2;
+            //System.out.println(hostname1 + " linked " + hostname2 + " and compare to is " + (hostname1.compareTo(hostname2) > 0));
             if (hostname1.compareTo(hostname2) > 0) {
                 if (data.getOverlay().containsIP(hostname1)) {
+                    //System.out.println("Found copy in overlay for hostname1 in link weights request");
                     host1 = data.getOverlay().getByIp(hostname1);
                     if (host1 == null) {
                         System.out.println("Issue converting Ip string to registered node data in link weights request 1");
