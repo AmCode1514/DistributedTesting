@@ -10,7 +10,7 @@ public class RegisteredNodeData {
     Connection conn;
     String registeredNodeIP; 
     int registeredNodeServerPort;
-    HashMap<String, Integer> neighborNodesAndWeights = new HashMap<String, Integer>();
+    HashMap<String, Link> neighborNodesAndWeights = new HashMap<String, Link>();
     boolean connected;
     public RegisteredNodeData(Connection conn, String registeredNodeIP, int registeredNodeServerPort) {
         this.conn = conn;
@@ -29,14 +29,14 @@ public class RegisteredNodeData {
     public boolean hasConnection() {
         return connected;
     }
-    public void addNeighbor(String neighborNode, int linkWeight) {
-        neighborNodesAndWeights.put(neighborNode, linkWeight);
+    public void addNeighbor(Link nodeLink) {
+        neighborNodesAndWeights.put(nodeLink.getRegisteredNodeData().getIP(), nodeLink);
     }
     public int getNumberOfLinks() {
         return neighborNodesAndWeights.size();
     }
     public int getLinkWeight(String ip) {
-        return neighborNodesAndWeights.get(ip);
+        return neighborNodesAndWeights.get(ip).getLinkWeight();
     } 
     public String getIP() {
         return registeredNodeIP;
@@ -54,5 +54,8 @@ public class RegisteredNodeData {
     }
     public Set<String> getNeighborNodesMapKeys() {
         return neighborNodesAndWeights.keySet();
+    }
+    public RegisteredNodeData getNeighbor(String ip) {
+        return neighborNodesAndWeights.get(ip).getRegisteredNodeData();
     }
 }
