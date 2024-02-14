@@ -46,20 +46,54 @@ public class LinkWeightsRequest implements Event {
     public int getPort() {
         return portNumber;
     }
-    @Override
+    // @Override
+    // public void OnEvent(NodeData data) {
+    //     String[] parsedLinks = linkInformation.split("/");
+    //     for(int i = 0; i < parsedLinks.length; i = i + 5) {
+    //         String hostname1 = parsedLinks[i];
+    //         int portNumber1 = Integer.valueOf(parsedLinks[i+1]);
+    //         String hostname2 = parsedLinks[i+2];
+    //         int portNumber2 = Integer.valueOf(parsedLinks[i+3]);
+    //         int weight = Integer.valueOf(parsedLinks[i+4]);
+    //         String comparisonString1 = hostname1 + portNumber1;
+    //         String comparisonString2 = hostname2 + portNumber2;
+    //         RegisteredNodeData host1;
+    //         RegisteredNodeData host2;
+    //         if (comparisonString1.compareTo(comparisonString2) > 0) {
+    //             if (data.getOverlay().containsIP(hostname1)) {
+    //                 host1 = data.getOverlay().getByIp(hostname1);
+    //                 if (host1 == null) {
+    //                     System.out.println("Issue converting Ip string to registered node data in link weights request 1");
+    //                 }
+    //             }
+    //             else {
+    //                 host1 = new RegisteredNodeData(hostname1, portNumber1);
+    //                 data.getOverlay().addRegisteredNode(host1);
+    //             }
+    //             if (data.getOverlay().containsIP(hostname2)) {
+    //                 host2 = data.getOverlay().getByIp(hostname2);
+    //                 if (host2 == null) {
+    //                     System.out.println("Issue converting Ip string to registered node data in link weights request 2");
+    //                 }
+    //             }
+    //             else {
+    //                 host2 = new RegisteredNodeData(hostname2, portNumber2);
+    //                 data.getOverlay().addRegisteredNode(host2);
+    //             }
+    //             host1.addNeighbor(hostname2, weight);
+    //             host2.addNeighbor(hostname1, weight);
+    //         }
+    //     }
+    // }
     public void OnEvent(NodeData data) {
         String[] parsedLinks = linkInformation.split("/");
-        for(int i = 0; i < parsedLinks.length; i = i + 5) {
+        for(int i = 0; i < parsedLinks.length; i = i + 3) {
             String hostname1 = parsedLinks[i];
-            int portNumber1 = Integer.valueOf(parsedLinks[i+1]);
-            String hostname2 = parsedLinks[i+2];
-            int portNumber2 = Integer.valueOf(parsedLinks[i+3]);
-            int weight = Integer.valueOf(parsedLinks[i+4]);
-            String comparisonString1 = hostname1 + portNumber1;
-            String comparisonString2 = hostname2 + portNumber2;
+            String hostname2 = parsedLinks[i+1];
+            int weight = Integer.valueOf(parsedLinks[i+2]);
             RegisteredNodeData host1;
             RegisteredNodeData host2;
-            if (comparisonString1.compareTo(comparisonString2) > 0) {
+            if (hostname1.compareTo(hostname2) > 0) {
                 if (data.getOverlay().containsIP(hostname1)) {
                     host1 = data.getOverlay().getByIp(hostname1);
                     if (host1 == null) {
@@ -67,7 +101,7 @@ public class LinkWeightsRequest implements Event {
                     }
                 }
                 else {
-                    host1 = new RegisteredNodeData(hostname1, portNumber1);
+                    host1 = new RegisteredNodeData(hostname1);
                     data.getOverlay().addRegisteredNode(host1);
                 }
                 if (data.getOverlay().containsIP(hostname2)) {
@@ -77,13 +111,14 @@ public class LinkWeightsRequest implements Event {
                     }
                 }
                 else {
-                    host2 = new RegisteredNodeData(hostname2, portNumber2);
+                    host2 = new RegisteredNodeData(hostname2);
                     data.getOverlay().addRegisteredNode(host2);
                 }
                 host1.addNeighbor(hostname2, weight);
                 host2.addNeighbor(hostname1, weight);
             }
         }
+        data.getOverlay().printNodesAndLinks();
     }
     @Override
     public byte[] reMarshallToBasic() {
@@ -97,6 +132,7 @@ public class LinkWeightsRequest implements Event {
         dout.writeInt(linkInformationBytes.length);
         dout.write(linkInformationBytes);
         dout.flush();
+        marshalledBytes = baOutputStream.toByteArray();
         dout.close();
         return marshalledBytes;
         }

@@ -25,6 +25,8 @@ public class RegistryLauncher {
         registry.setPrimaryServer(serverReference);
         serverInstance.start();
         System.out.println("server started successfully");
+        CommandExecutor exec = new CommandExecutor(registry);
+        exec.startCommandInput();
         }
         catch(IOException e) {
             e.printStackTrace();

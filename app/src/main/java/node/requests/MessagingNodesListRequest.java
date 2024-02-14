@@ -76,6 +76,7 @@ public class MessagingNodesListRequest implements Event {
         dout.writeInt(peerMessagingListBytes.length);
         dout.write(peerMessagingListBytes);
         dout.flush();
+        marshalledBytes = baOutputStream.toByteArray();
         dout.close();
         return marshalledBytes;
         }

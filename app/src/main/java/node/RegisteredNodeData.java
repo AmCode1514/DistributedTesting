@@ -2,6 +2,7 @@ package node;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Set;
 
 import transport.Connection;
 import transport.TCPReceive;
@@ -22,6 +23,9 @@ public class RegisteredNodeData {
         this.registeredNodeServerPort = registeredNodeServerPort;
         connected = false;
     }
+    public RegisteredNodeData(String registeredNodeIP) {
+        this.registeredNodeIP = registeredNodeIP;
+    }
     public boolean hasConnection() {
         return connected;
     }
@@ -31,6 +35,9 @@ public class RegisteredNodeData {
     public int getNumberOfLinks() {
         return neighborNodesAndWeights.size();
     }
+    public int getLinkWeight(String ip) {
+        return neighborNodesAndWeights.get(ip);
+    } 
     public String getIP() {
         return registeredNodeIP;
     }
@@ -44,5 +51,8 @@ public class RegisteredNodeData {
         else {
             return false;
         }
+    }
+    public Set<String> getNeighborNodesMapKeys() {
+        return neighborNodesAndWeights.keySet();
     }
 }
