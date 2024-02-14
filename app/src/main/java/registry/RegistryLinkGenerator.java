@@ -4,9 +4,10 @@ import node.Overlay;
 
 public class RegistryLinkGenerator {
     Overlay overlay;
-    public RegistryLinkGenerator(Overlay overlay, int numberOfLinks) {
+    public RegistryLinkGenerator(Overlay overlay) {
         this.overlay = overlay;
     }
+    //ITS ALIVE!!!
     public void generateLinks(int numberOfLinks) {
         for (int i = 0; i < overlay.size(); ++i) {
             if (i == overlay.size() - 1) {

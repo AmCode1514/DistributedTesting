@@ -2,6 +2,8 @@ package node;
 
 import java.util.ArrayList;
 
+import registry.RegistryLinkGenerator;
+
 public class Overlay {
     //HashMap<String, RegisteredNodeData> registeredNodeInformation = new HashMap<String, RegisteredNodeData>();
     ArrayList<RegisteredNodeData> registeredNodeInformation = new ArrayList<RegisteredNodeData>();
@@ -32,4 +34,12 @@ public class Overlay {
         }
         return null;
     }
-}
+    public void printNodesAndLinks() {
+        for (int i = 0; i < registeredNodeInformation.size(); ++i) {
+            System.out.println("Current Node: " + registeredNodeInformation.get(i).getIP() + "\n Neighbors");
+            for (String key : registeredNodeInformation.get(i).getNeighborNodesMapKeys()) {
+                System.out.println(key);
+            }
+        }
+    }
+    }
