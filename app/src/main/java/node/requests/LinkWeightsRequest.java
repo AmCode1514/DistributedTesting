@@ -8,9 +8,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import node.Djikstra;
 import node.Event;
 import node.Link;
 import node.NodeData;
+import node.Overlay;
 import node.RegisteredNodeData;
 
 public class LinkWeightsRequest implements Event {
@@ -61,25 +63,25 @@ public class LinkWeightsRequest implements Event {
     //         RegisteredNodeData host1;
     //         RegisteredNodeData host2;
     //         if (comparisonString1.compareTo(comparisonString2) > 0) {
-    //             if (data.getOverlay().containsIP(hostname1)) {
-    //                 host1 = data.getOverlay().getByIp(hostname1);
+    //             if (overlay.containsIP(hostname1)) {
+    //                 host1 = overlay.getByIp(hostname1);
     //                 if (host1 == null) {
     //                     System.out.println("Issue converting Ip string to registered node data in link weights request 1");
     //                 }
     //             }
     //             else {
     //                 host1 = new RegisteredNodeData(hostname1, portNumber1);
-    //                 data.getOverlay().addRegisteredNode(host1);
+    //                 overlay.addRegisteredNode(host1);
     //             }
-    //             if (data.getOverlay().containsIP(hostname2)) {
-    //                 host2 = data.getOverlay().getByIp(hostname2);
+    //             if (overlay.containsIP(hostname2)) {
+    //                 host2 = overlay.getByIp(hostname2);
     //                 if (host2 == null) {
     //                     System.out.println("Issue converting Ip string to registered node data in link weights request 2");
     //                 }
     //             }
     //             else {
     //                 host2 = new RegisteredNodeData(hostname2, portNumber2);
-    //                 data.getOverlay().addRegisteredNode(host2);
+    //                 overlay.addRegisteredNode(host2);
     //             }
     //             host1.addNeighbor(hostname2, weight);
     //             host2.addNeighbor(hostname1, weight);
@@ -88,6 +90,7 @@ public class LinkWeightsRequest implements Event {
     // }
     public void OnEvent(NodeData data) {
         String[] parsedLinks = linkInformation.split("/");
+        Overlay overlay = data.getOverlay();
         for(int i = 0; i < parsedLinks.length; i = i + 3) {
             String hostname1 = parsedLinks[i];
             String hostname2 = parsedLinks[i+1];
@@ -96,32 +99,35 @@ public class LinkWeightsRequest implements Event {
             RegisteredNodeData host2;
             //System.out.println(hostname1 + " linked " + hostname2 + " and compare to is " + (hostname1.compareTo(hostname2) > 0));
             if (hostname1.compareTo(hostname2) > 0) {
-                if (data.getOverlay().containsIP(hostname1)) {
+                if (overlay.containsIP(hostname1)) {
                     //System.out.println("Found copy in overlay for hostname1 in link weights request");
-                    host1 = data.getOverlay().getByIp(hostname1);
+                    host1 = overlay.getByIp(hostname1);
                     if (host1 == null) {
                         System.out.println("Issue converting Ip string to registered node data in link weights request 1");
                     }
                 }
                 else {
                     host1 = new RegisteredNodeData(hostname1);
-                    data.getOverlay().addRegisteredNode(host1);
+                    overlay.addRegisteredNode(host1);
                 }
-                if (data.getOverlay().containsIP(hostname2)) {
-                    host2 = data.getOverlay().getByIp(hostname2);
+                if (overlay.containsIP(hostname2)) {
+                    host2 = overlay.getByIp(hostname2);
                     if (host2 == null) {
                         System.out.println("Issue converting Ip string to registered node data in link weights request 2");
                     }
                 }
                 else {
                     host2 = new RegisteredNodeData(hostname2);
-                    data.getOverlay().addRegisteredNode(host2);
+                    overlay.addRegisteredNode(host2);
                 }
                 host1.addNeighbor(new Link(host2, weight));
                 host2.addNeighbor(new Link(host1, weight));
             }
         }
-        data.getOverlay().printNodesAndLinks();
+        overlay.printNodesAndLinks();
+        Djikstra djik = new Djikstra(overlay, overlay.getByIp(data.getLocalHost()));
+        djik.doDjikstra();
+        System.out.println(overlay.getShortestPathToSource(overlay.get(0), overlay.getByIp(data.getLocalHost())));
     }
     @Override
     public byte[] reMarshallToBasic() {

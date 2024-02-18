@@ -25,9 +25,11 @@ public class MessengerData implements NodeData {
 
     private final TCPSend sender = new TCPSend();
 
+    private int numberOfMessagesSent = 0;
+    private long summationOfMessagesSent = 0;
     private int numberOfMessagesReceived = 0;
-    private long summationOfMessagesSent;
-    private int numberOfMessagesSent;
+    private long summationOfReceivedMessages = 0;
+    private int numberOfMessagesRelayed = 0;
 
 
     public MessengerData() {
@@ -98,5 +100,25 @@ public class MessengerData implements NodeData {
             e.printStackTrace();
         }
         return null;
+    }
+    @Override
+    public synchronized int numberOfMessagesSent() {
+        return numberOfMessagesSent;
+    }
+    @Override
+    public synchronized long summationOfSentMessages() {
+        return summationOfMessagesSent;
+    }
+    @Override
+    public synchronized int numberOfMessagesReceived() {
+        return numberOfMessagesReceived;
+    }
+    @Override
+    public synchronized long summationOfReceivedMessages() {
+        return summationOfReceivedMessages;
+    }
+    @Override
+    public synchronized int numberOfMessagesRelayed() {
+        return numberOfMessagesRelayed;
     }
 }
