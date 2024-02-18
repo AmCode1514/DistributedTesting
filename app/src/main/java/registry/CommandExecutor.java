@@ -13,6 +13,7 @@ import node.RegisteredNodeData;
 import node.requests.LinkWeightsRequest;
 import node.requests.MessagingNodesListRequest;
 import node.requests.NodeTrafficSummaryRequest;
+import node.requests.StartRequest;
 import transport.Connection;
 
 public class CommandExecutor {
@@ -44,15 +45,27 @@ public class CommandExecutor {
                         String nodeAndLinksInformation = linkWeightsRequestStringGenerate();
                         int numberOfLinks = 0;
                         for (Connection conn : nodeReference.getAllConnections()) {
-                            LinkWeightsRequest eventToSend = new LinkWeightsRequest(4, conn.getIPAddress(),conn.getPortNumber(),numberOfLinks,nodeAndLinksInformation);
+                            LinkWeightsRequest eventToSend = new LinkWeightsRequest(4, nodeReference.getLocalHost(),5000,numberOfLinks,nodeAndLinksInformation);
                             nodeReference.getTCPSend().sendEvent(eventToSend, conn);
                         }
+                        break;
                     case "traffic-summary-request":
                         for (Connection conn : nodeReference.getAllConnections()) {
-                            NodeTrafficSummaryRequest req = new NodeTrafficSummaryRequest(5,nodeReference.getLocalHost(), 5000);
+                            NodeTrafficSummaryRequest req = new NodeTrafficSummaryRequest(5,nodeReference.getLocalHost(), 5000, nodeReference);
                             nodeReference.getTCPSend().sendEvent(req, conn);
                         }
                     break;
+                    case "start":
+                        int rounds = Integer.valueOf(command[1]); 
+                        for(Connection conn : nodeReference.getAllConnections()) {
+                            StartRequest req = new StartRequest(7, nodeReference.getLocalHost(), 5000, rounds);
+                            nodeReference.getTCPSend().sendEvent(req, conn);
+                        }
+                        break;
+                    case "summations":
+                    System.out.println("Sent: " + nodeReference.registryGetTotalSentSummation());
+                    System.out.println("Received " + nodeReference.registryGetTotalReceivedSummation());
+
                 }
 
             }

@@ -60,4 +60,20 @@ public class Overlay {
             return path;
         }
     }
+    public String[] getUsableShortestPathToSource(RegisteredNodeData start, RegisteredNodeData source) {
+        String path = getShortestPathToSource(start, source);
+        if (path.split(" ").length == 1) {
+            return path.split(" ");
+        }
+        else {
+            String[] actualPath = path.split(" ");
+            String[] parsedPath = new String[actualPath.length];
+            int count = 0;
+            for (int i = actualPath.length - 1; i >= 0; --i) {
+                parsedPath[count] = actualPath[i];
+                ++count;
+            }
+            return parsedPath;
+        }
+    }
 }

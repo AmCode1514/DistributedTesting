@@ -27,7 +27,7 @@ public class MessengerLauncher {
         messenger.setRegistry(serverReference.establishConnection(args[1], port));
         System.out.println("Registry Connection Successful");
         serverInstance.start();
-        RegistrationRequest init = new RegistrationRequest(1, serverReference.getServerIpAddress(), serverReference.getServerPort());
+        RegistrationRequest init = new RegistrationRequest(1, serverReference.getServerIpAddress(), serverReference.getServerPort(), messenger);
         System.out.println("Messenger launcher server ip:" + serverReference.getServerIpAddress());
         messenger.getTCPSend().sendEvent(init, messenger.getRegistry());
         }

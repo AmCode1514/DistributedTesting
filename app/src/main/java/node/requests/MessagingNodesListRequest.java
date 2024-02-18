@@ -12,13 +12,14 @@ import node.Event;
 import node.NodeData;
 import transport.Connection;
 
-public class MessagingNodesListRequest implements Event {
+public class MessagingNodesListRequest extends Thread implements Event {
 
     private final int requestType;
     private final String ipAddress;
     private final int portNumber;
     private String peerMessagingList;
     private int numberOfPeers;
+    NodeData data;
 
     public MessagingNodesListRequest(int requestType, String ipAddress, int portNumber, String peerMessagingList) {
         this.requestType = requestType;
@@ -26,10 +27,11 @@ public class MessagingNodesListRequest implements Event {
         this.portNumber = portNumber;
         this.peerMessagingList = peerMessagingList;
     }
-    public MessagingNodesListRequest(int requestType, String ipAddress, int portNumber, byte[] payload) {
+    public MessagingNodesListRequest(int requestType, String ipAddress, int portNumber, byte[] payload, NodeData data) {
         this.requestType = requestType;
         this. ipAddress = ipAddress;
         this.portNumber = portNumber;
+        this.data = data;
         unPackData(payload);
     }
     @Override
@@ -48,20 +50,24 @@ public class MessagingNodesListRequest implements Event {
     }
 
     @Override
-    public void OnEvent(NodeData data) {
+    public void OnEvent() {
         String[] peerMessagingArray = peerMessagingList.split("/");
         for (String t : peerMessagingArray) {
             System.out.println(t);
         }
+        synchronized(data) {
         for(int i = 0; i < peerMessagingArray.length; i = i + 2) {
             String ipAddress = peerMessagingArray[i];
             int portNumber = Integer.valueOf(peerMessagingArray[i+1]);
             data.getServer().establishConnection(ipAddress, portNumber);
         }
+    }
         System.out.println("Message nodes list request received, current list of successfully established connections:");
+        synchronized(data) {
         for (Connection conn : data.getAllConnections()) {
             System.out.println("Connection: " + conn.getIPAddress());
         }
+    }
         if (data.getNumberOfConnections() - 1 != numberOfPeers) {
             System.out.println("Mismatch detected between number of peer nodes requested and actual \nRequested:" + numberOfPeers + "\n Actual:" + data.getNumberOfConnections());
         }
@@ -106,5 +112,7 @@ public class MessagingNodesListRequest implements Event {
             e.printStackTrace();
         }
     }
-    
+    public void run() {
+        OnEvent();
+    }
 }

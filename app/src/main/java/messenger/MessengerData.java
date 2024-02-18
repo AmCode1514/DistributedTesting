@@ -35,11 +35,11 @@ public class MessengerData implements NodeData {
     public MessengerData() {
 
     }
-    public void terminateConnection(String ipAddress) {
+    public synchronized void terminateConnection(String ipAddress) {
         connectionList.get(ipAddress).terminateReceiver();
         connectionList.remove(ipAddress);
     }
-    @Override
+    //@Override
     public synchronized void addConnection(Connection currConnection) {
         if (currConnection.getIPAddress().contains(".cs.colostate.edu")) {
             String scrubbedDomain = currConnection.getIPAddress().replace(".cs.colostate.edu", "");
@@ -50,20 +50,20 @@ public class MessengerData implements NodeData {
         System.out.println("Messenger Connection add ip:" + currConnection.getIPAddress());
         connectionList.put(currConnection.getIPAddress(), currConnection);
     }
-    @Override
+    //@Override
     public synchronized Connection getConnection(String ipAddress) {
         return connectionList.get(ipAddress);
     }
-    @Override
+    //@Override
     public synchronized TCPSend getTCPSend() {
         return sender;
     }
-    @Override
+    //@Override
     public Connection getRegistry() {
         //todo
         return registry;
     }
-    @Override
+    //@Override
     public void setRegistry(Connection registry) {
         this.registry = registry;
     }
@@ -75,11 +75,11 @@ public class MessengerData implements NodeData {
     public Server getServer() {
         return primaryServerInstance;
     }
-    @Override
+    //@Override
     public Overlay getOverlay() {
         return overlay;
     }
-    @Override
+    //@Override
     public synchronized ArrayList<Connection> getAllConnections() {
         ArrayList<Connection> returnedListOfConnections = new ArrayList<Connection>();
         for (String key : connectionList.keySet()) {
@@ -87,11 +87,11 @@ public class MessengerData implements NodeData {
         }
         return returnedListOfConnections;
     }
-    @Override
-    public int getNumberOfConnections() {
+    //@Override
+    public synchronized int getNumberOfConnections() {
         return connectionList.size();
     }
-    @Override
+    //@Override
     public String getLocalHost() {
         try {
             return InetAddress.getLocalHost().getHostName();
@@ -101,24 +101,64 @@ public class MessengerData implements NodeData {
         }
         return null;
     }
-    @Override
+    //@Override
     public synchronized int numberOfMessagesSent() {
         return numberOfMessagesSent;
     }
-    @Override
+    //@Override
     public synchronized long summationOfSentMessages() {
         return summationOfMessagesSent;
     }
-    @Override
+    //@Override
     public synchronized int numberOfMessagesReceived() {
         return numberOfMessagesReceived;
     }
-    @Override
+    //@Override
     public synchronized long summationOfReceivedMessages() {
         return summationOfReceivedMessages;
     }
-    @Override
+    //@Override
     public synchronized int numberOfMessagesRelayed() {
         return numberOfMessagesRelayed;
+    }
+    //@Override
+    public synchronized void incrementMessagesSent() {
+        ++numberOfMessagesSent;
+    }
+    //@Override
+    public synchronized void addPayloadSummationOfMessagesSent(int payload) {
+       summationOfMessagesSent += payload;
+    }
+    //@Override
+    public synchronized void incrementMessagesReceived() {
+        ++numberOfMessagesReceived;
+    }
+    //@Override
+    public synchronized void addPayloadSummationOfMessagesReceived(int payload) {
+        summationOfReceivedMessages += payload;
+    }
+    //@Override
+    public synchronized void incrementMessagesRelayed() {
+        ++numberOfMessagesRelayed;
+    }
+    //@Override
+    public long registryGetTotalSentSummation() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'registryGetTotalSentSummation'");
+    }
+    //@Override
+    public void registryAddTotalSentSummation(long pay) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'registryAddTotalSentSummation'");
+    }
+    //@Override
+    public long registryGetTotalReceivedSummation() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'registryGetTotalReceivedSummation'");
+    }
+    //@Override
+    public void registryAddTotalReceivedSummation(long pay) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'registryAddTotalReceivedSummation'");
     }
 }
