@@ -21,4 +21,9 @@ public interface NodeData {
     public int getNumberOfConnections();
     public ArrayList<Connection> getAllConnections();
     public String getLocalHost();
+    public int numberOfMessagesSent();
+    public long summationOfSentMessages();
+    public int numberOfMessagesReceived();
+    public long summationOfReceivedMessages();
+    public int numberOfMessagesRelayed();
 }

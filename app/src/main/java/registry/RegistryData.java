@@ -91,4 +91,29 @@ public class RegistryData implements NodeData {
         }
         return null;
     }
+    @Override
+    public int numberOfMessagesSent() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'numberOfMessagesSent'");
+    }
+    @Override
+    public long summationOfSentMessages() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'summationOfSentMessages'");
+    }
+    @Override
+    public int numberOfMessagesReceived() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'numberOfMessagesReceived'");
+    }
+    @Override
+    public long summationOfReceivedMessages() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'summationOfReceivedMessages'");
+    }
+    @Override
+    public int numberOfMessagesRelayed() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'numberOfMessagesRelayed'");
+    }
 }

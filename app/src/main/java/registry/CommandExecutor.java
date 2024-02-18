@@ -12,6 +12,7 @@ import node.Overlay;
 import node.RegisteredNodeData;
 import node.requests.LinkWeightsRequest;
 import node.requests.MessagingNodesListRequest;
+import node.requests.NodeTrafficSummaryRequest;
 import transport.Connection;
 
 public class CommandExecutor {
@@ -46,6 +47,12 @@ public class CommandExecutor {
                             LinkWeightsRequest eventToSend = new LinkWeightsRequest(4, conn.getIPAddress(),conn.getPortNumber(),numberOfLinks,nodeAndLinksInformation);
                             nodeReference.getTCPSend().sendEvent(eventToSend, conn);
                         }
+                    case "traffic-summary-request":
+                        for (Connection conn : nodeReference.getAllConnections()) {
+                            NodeTrafficSummaryRequest req = new NodeTrafficSummaryRequest(5,nodeReference.getLocalHost(), 5000);
+                            nodeReference.getTCPSend().sendEvent(req, conn);
+                        }
+                    break;
                 }
 
             }

@@ -43,4 +43,21 @@ public class Overlay {
             }
         }
     }
+    public int getIndexByIp(String ip) {
+        for (int i = 0; i < registeredNodeInformation.size(); ++i) {
+            if (registeredNodeInformation.get(i).getIP().equals(ip)) {
+                return i;
+            }
+        }
+        return -1;
     }
+    public String getShortestPathToSource(RegisteredNodeData start, RegisteredNodeData source) {
+        if (start.getIP().equals(source.getIP())) {
+            return source.getIP();
+        }
+        else {
+            String path = start.getIP() + " " + getShortestPathToSource(start.getDjikstraParentNode(), source);
+            return path;
+        }
+    }
+}
