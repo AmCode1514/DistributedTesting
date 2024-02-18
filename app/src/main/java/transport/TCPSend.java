@@ -12,7 +12,7 @@ public class TCPSend {
     public TCPSend() {
         
     }
-    public boolean sendEvent(Event eventToSend, Connection tcpConnection) {
+    public synchronized boolean sendEvent(Event eventToSend, Connection tcpConnection) {
 
         byte[] payload = eventToSend.reMarshallToBasic();
         System.out.println("TCPSEND closed connection status: " + tcpConnection.getConnectionSocket().isClosed());

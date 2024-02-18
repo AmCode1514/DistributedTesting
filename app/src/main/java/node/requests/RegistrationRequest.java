@@ -9,15 +9,17 @@ import node.NodeData;
 import node.RegisteredNodeData;
 import transport.Connection;
 
-public class RegistrationRequest implements Event {
+public class RegistrationRequest extends Thread implements Event {
     private final int requestType;
     private final String ipAddress;
     private final int portNumber;
+    NodeData data;
     
-    public RegistrationRequest(int requestType, String ipAddress, int portNumber) {
+    public RegistrationRequest(int requestType, String ipAddress, int portNumber, NodeData data) {
         this.requestType = requestType;
         this. ipAddress = ipAddress;
         this.portNumber = portNumber;
+        this.data = data;
         //this.bytes = bytes;
     }
     @Override
@@ -25,7 +27,8 @@ public class RegistrationRequest implements Event {
         return requestType;
     }
     //do something, potentially create new request and send
-    public void OnEvent(NodeData data) {
+    @Override
+    public void OnEvent() {
         System.out.println("Registration request requestType:" + requestType);
         System.out.println("Registration request ip:" + ipAddress);
         System.out.println("Registration request port:" + portNumber);
@@ -40,10 +43,12 @@ public class RegistrationRequest implements Event {
             statusCode = 0;
             additionalInformation = "Connection fetch failed, if you see this message there has been big boo boo";
         }
+        synchronized(data) {
         RegisteredNodeData nodeDataForOverlay = new RegisteredNodeData(conn, ipAddress, portNumber);
         data.getOverlay().addRegisteredNode(nodeDataForOverlay);
         RegistrationResponse response = new RegistrationResponse(2, conn.getIPAddress(), conn.getPortNumber(), statusCode, additionalInformation);
         data.getTCPSend().sendEvent(response, conn);
+        }
     }
     @Override
     public byte[] reMarshallToBasic() {
@@ -75,5 +80,8 @@ public class RegistrationRequest implements Event {
     public void unPackData(byte[] data) {
         // this method is unnecessary as there is no additional data to unpack in this request at this time. 
         throw new UnsupportedOperationException("Unimplemented method 'unPackData'");
+    }
+    public void run() {
+        OnEvent();
     }
 }

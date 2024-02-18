@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import node.Event;
 import node.NodeData;
-public class RegistrationResponse implements Event {
+public class RegistrationResponse extends Thread implements Event {
 
     private final int requestType;
     private final String ipAddress;
@@ -17,10 +17,13 @@ public class RegistrationResponse implements Event {
     private int statusCode;
     private String additionalInformation;
     //constructor for rebuilding
-    public RegistrationResponse(int requestType, String ipAddress, int portNumber, byte[] bytes) {
+    NodeData data;
+    
+    public RegistrationResponse(int requestType, String ipAddress, int portNumber, byte[] bytes, NodeData data) {
         this.requestType = requestType;
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
+        this.data = data;
         unPackData(bytes);
     }
     //constructor for use
@@ -35,7 +38,8 @@ public class RegistrationResponse implements Event {
     public int getRequestType() {
         return requestType;
     }
-    public void OnEvent(NodeData data) {
+    @Override
+    public void OnEvent() {
         System.out.println(String.format("Registration response received with status code %s and additionInformation: %s", statusCode, additionalInformation));
     }
     @Override
@@ -84,5 +88,8 @@ public class RegistrationResponse implements Event {
             System.out.println("Issue converting payload to additional fields in registration response");
             e.printStackTrace();
         }
+    }
+    public void run() {
+        OnEvent();
     }
 }

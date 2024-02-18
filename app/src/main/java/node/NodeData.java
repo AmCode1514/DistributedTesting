@@ -26,4 +26,13 @@ public interface NodeData {
     public int numberOfMessagesReceived();
     public long summationOfReceivedMessages();
     public int numberOfMessagesRelayed();
+    public void incrementMessagesSent();
+    public void addPayloadSummationOfMessagesSent(int payload);
+    public void incrementMessagesReceived();
+    public void addPayloadSummationOfMessagesReceived(int payload);
+    public void incrementMessagesRelayed();
+    public long registryGetTotalSentSummation();
+    public void registryAddTotalSentSummation(long pay);
+    public long registryGetTotalReceivedSummation();
+    public void registryAddTotalReceivedSummation(long pay);
 }

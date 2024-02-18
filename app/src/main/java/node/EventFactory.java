@@ -7,13 +7,14 @@ import java.io.IOException;
 import node.requests.*;
 
 public class EventFactory {
-
-    private EventFactory() {
+    NodeData data;
+    private EventFactory(NodeData data) {
+        this.data = data;
     }
 
     //Unmarshall message into basic event, this standardizes message format and is extensible through the subClassEvent method.
     //The goal is to separate protocols which happen at every step from specialized functions.
-    public Event generateEvent(byte[] data) {
+    public Thread generateEvent(byte[] data) {
         int requestType;
         String ipAddress;
         int portNumber;
@@ -43,18 +44,20 @@ public class EventFactory {
             return null;
         }
     }
-    private Event subClassEvent(int requestType, String ipAddress, int portNumber, byte[] remainingData) {
+    private Thread subClassEvent(int requestType, String ipAddress, int portNumber, byte[] remainingData) {
         switch(requestType) {
-            case 1: return new RegistrationRequest(requestType, ipAddress, portNumber);
-            case 2: return new RegistrationResponse(requestType, ipAddress, portNumber, remainingData);
-            case 3: return new MessagingNodesListRequest(requestType, ipAddress, portNumber, remainingData);
-            case 4: return new LinkWeightsRequest(requestType, ipAddress, portNumber, remainingData);
-            case 5: return new NodeTrafficSummaryRequest(requestType, ipAddress, portNumber);
-            case 6: return new TrafficSummaryResponse(requestType, ipAddress, portNumber, remainingData);
+            case 1: return new RegistrationRequest(requestType, ipAddress, portNumber, data);
+            case 2: return new RegistrationResponse(requestType, ipAddress, portNumber, remainingData, data);
+            case 3: return new MessagingNodesListRequest(requestType, ipAddress, portNumber, remainingData, data);
+            case 4: return new LinkWeightsRequest(requestType, ipAddress, portNumber, remainingData, data);
+            case 5: return new NodeTrafficSummaryRequest(requestType, ipAddress, portNumber, data);
+            case 6: return new TrafficSummaryResponse(requestType, ipAddress, portNumber, remainingData, data);
+            case 7: return new StartRequest(requestType, ipAddress, portNumber, remainingData, data);
+            case 8: return new MessageRequest(requestType, ipAddress, portNumber, remainingData, data);
         }
         return null;
     }
-    public static EventFactory getInstance() {
-        return new EventFactory();
+    public static EventFactory getInstance(NodeData data) {
+        return new EventFactory(data);
     }
 }

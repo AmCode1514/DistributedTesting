@@ -9,12 +9,12 @@ public class EventHandler extends Thread {
     // Additionally, this class uses the event factory to build a basic event from byte arrays.
     private final EventFactory factory;
     private final NodeData nodeData;
-    private Deque<Event> eventList;
+    private Deque<Thread> eventList;
     private EventHandler(NodeData nodeData) {
         //one eventHandler to every server and one event factory per handler.
-        factory = EventFactory.getInstance();
+        factory = EventFactory.getInstance(nodeData);
         this.nodeData = nodeData;
-        eventList = new LinkedList<Event>();
+        eventList = new LinkedList<Thread>();
     }
     //instead of just returning the event this method will also add to the eventHandlers NodeData object. 
     //this method is synchronized essentially as an add method, the run method is synchronized at start but will wait
@@ -22,7 +22,7 @@ public class EventHandler extends Thread {
     //adding and processing do not occur concurrently since the data structures will not be thread safe.
     public void parseAndAddEvent(byte[] message) {
         //in theory this parsing method in the factory is thread safe, so why not let the receiver threads do the work to maximize concurrency while waiting for the object lock.
-        Event newEvent = factory.generateEvent(message);
+        Thread newEvent = factory.generateEvent(message);
         //acquire lock on eventList and then add the respective event. All other writes block at line 27
         synchronized(eventList) {
             eventList.addFirst(newEvent);
@@ -43,9 +43,8 @@ public class EventHandler extends Thread {
                     eventList.wait();
                     // while the list isn't empty then process event and remove it from list.
                     while(eventList.size() != 0) {
-                        synchronized(nodeData) {
-                            eventList.pop().OnEvent(nodeData);
-                        }
+                        System.out.println("Handled event:");
+                        eventList.pop().start();
                     }
                 }
             }

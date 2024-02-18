@@ -9,7 +9,7 @@ import java.io.IOException;
 
 import node.Event;
 import node.NodeData;
-public class TrafficSummaryResponse implements Event {
+public class TrafficSummaryResponse extends Thread implements Event {
 
     private final int requestType;
     private final String ipAddress;
@@ -20,11 +20,13 @@ public class TrafficSummaryResponse implements Event {
     private int numberOfMessagesReceived;
     private long summationOfReceivedMessages;
     private int numberOfMessagesRelayed;
+    NodeData data;
     //constructor for rebuilding
-    public TrafficSummaryResponse(int requestType, String ipAddress, int portNumber, byte[] bytes) {
+    public TrafficSummaryResponse(int requestType, String ipAddress, int portNumber, byte[] bytes, NodeData data) {
         this.requestType = requestType;
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
+        this.data = data;
         unPackData(bytes);
     }
     //constructor for use
@@ -42,8 +44,12 @@ public class TrafficSummaryResponse implements Event {
     public int getRequestType() {
         return requestType;
     }
-    public void OnEvent(NodeData data) {
+    public void OnEvent() {
         System.out.println(String.format("Node IP: %s \n Node Port: %s \n Number of Messages Sent %s \n Summation Of Sent Messages: %s \n Number of Messages Received: %s \n Summation Of Received Messages: %s \n Number Of Relayed Messages: %s \n\n\n\n",ipAddress, portNumber, numberOfMessagesSent, summationOfMessagesSent, numberOfMessagesReceived, summationOfReceivedMessages, numberOfMessagesRelayed));
+        synchronized(data) {
+            data.registryAddTotalSentSummation(summationOfMessagesSent);
+            data.registryAddTotalReceivedSummation(summationOfReceivedMessages);
+        }
     }
     @Override
     public byte[] reMarshallToBasic() {
@@ -93,5 +99,8 @@ public class TrafficSummaryResponse implements Event {
             System.out.println("Issue converting payload to additional fields in  response");
             e.printStackTrace();
         }
+    }
+    public void run() {
+        OnEvent();
     }
 }

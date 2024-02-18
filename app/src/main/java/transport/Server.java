@@ -36,7 +36,9 @@ public class Server extends Thread {
                 if (newConnection.isConnected()) {
                     TCPReceive receiver = new TCPReceive(newConnection, handler);
                     Connection tcpConnection = new Connection(receiver, newConnection);
-                    nodeData.addConnection(tcpConnection);
+                    synchronized(nodeData) {
+                        nodeData.addConnection(tcpConnection);
+                    }
                     tcpConnection.startReceiver();
                     return tcpConnection;
         }

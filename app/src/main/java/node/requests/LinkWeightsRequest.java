@@ -14,13 +14,15 @@ import node.Link;
 import node.NodeData;
 import node.Overlay;
 import node.RegisteredNodeData;
+import transport.Connection;
 
-public class LinkWeightsRequest implements Event {
+public class LinkWeightsRequest extends Thread implements Event {
     private final int requestType;
     private final String ipAddress;
     private final int portNumber;
     private int numberOfLinks;
     private String linkInformation;
+    NodeData data;
     
     public LinkWeightsRequest(int requestType, String ipAddress, int portNumber, int numberOfLinks, String linkInformation) {
         this.requestType = requestType;
@@ -29,11 +31,12 @@ public class LinkWeightsRequest implements Event {
         this.numberOfLinks = numberOfLinks;
         this.linkInformation = linkInformation;
     }
-    public LinkWeightsRequest(int requestType, String ipAddress, int portNumber, byte[] data) {
+    public LinkWeightsRequest(int requestType, String ipAddress, int portNumber, byte[] payload, NodeData data) {
         this.requestType = requestType;
         this.ipAddress = ipAddress;
         this.portNumber = portNumber;
-        unPackData(data);
+        this.data = data;
+        unPackData(payload);
     }
     @Override
     public int getRequestType() {
@@ -88,7 +91,7 @@ public class LinkWeightsRequest implements Event {
     //         }
     //     }
     // }
-    public void OnEvent(NodeData data) {
+    public void OnEvent() {
         String[] parsedLinks = linkInformation.split("/");
         Overlay overlay = data.getOverlay();
         for(int i = 0; i < parsedLinks.length; i = i + 3) {
@@ -127,8 +130,16 @@ public class LinkWeightsRequest implements Event {
         overlay.printNodesAndLinks();
         Djikstra djik = new Djikstra(overlay, overlay.getByIp(data.getLocalHost()));
         djik.doDjikstra();
-        System.out.println(overlay.getShortestPathToSource(overlay.get(0), overlay.getByIp(data.getLocalHost())));
+        System.out.println("Actual Path:");
+        for (String t : overlay.getUsableShortestPathToSource(overlay.get(0), overlay.getByIp(data.getLocalHost()))) {
+            System.out.println(t);
+        }
+        synchronized(data) {
+        for (Connection conn : data.getAllConnections()) {
+            System.out.println("Connection: " + conn.getIPAddress());
+        }
     }
+}
     @Override
     public byte[] reMarshallToBasic() {
         byte[] marshalledBytes = null;
@@ -166,5 +177,8 @@ public class LinkWeightsRequest implements Event {
             System.out.println("Issue converting payload to additional fields in LinkWeightsRequest");
             e.printStackTrace();
         }
+    }
+    public void run() {
+        OnEvent();
     }
 }

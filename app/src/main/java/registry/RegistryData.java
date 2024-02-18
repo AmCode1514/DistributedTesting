@@ -22,16 +22,17 @@ public class RegistryData implements NodeData {
     long summationOfMessagesSent;
     int numberOfMessagesSent;
     Server primaryServerInstance;
-
+    long summationReceived = 0;
+    long summationSent = 0;
     public RegistryData() {
 
     }
-    public void terminateConnection(String ipAddress) {
+    public synchronized void terminateConnection(String ipAddress) {
         connectionList.get(ipAddress).terminateReceiver();
         connectionList.remove(ipAddress);
     }
-    @Override
-    public void addConnection(Connection currConnection) {
+    //@Override
+    public synchronized void addConnection(Connection currConnection) {
         if (currConnection.getIPAddress().contains(".cs.colostate.edu")) {
             String scrubbedDomain = currConnection.getIPAddress().replace(".cs.colostate.edu", "");
             System.out.println("Registry Scrubbed domain string: " + scrubbedDomain);
@@ -41,39 +42,39 @@ public class RegistryData implements NodeData {
         System.out.println("Registry Connection add ip:" + currConnection.getIPAddress());
         connectionList.put(currConnection.getIPAddress(), currConnection);
     }
-    @Override
-    public Connection getConnection(String ipAddress) {
+    //@Override
+    public synchronized Connection getConnection(String ipAddress) {
         return connectionList.get(ipAddress);
     }
-    @Override
-    public TCPSend getTCPSend() {
+    //@Override
+    public synchronized TCPSend getTCPSend() {
         return sender;
     }
-    @Override
+    //@Override
     public Connection getRegistry() {
         throw new UnsupportedOperationException("this is the registry doofus");
     }
-    @Override
+    //@Override
     public void setRegistry(Connection conn) {
         throw new UnsupportedOperationException("this is the registry doofus");
     }
     public void setPrimaryServer(Server primaryServerInstance) {
         this.primaryServerInstance = primaryServerInstance;
     }
-    @Override
+    //@Override
     public Server getServer() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getServer'");
     }
-    @Override
+    //@Override
     public Overlay getOverlay() {
         return overlay;
     }
-    @Override
+    //@Override
     public int getNumberOfConnections() {
         return connectionList.size();
     }
-    @Override
+    //@Override
     public ArrayList<Connection> getAllConnections() {
         ArrayList<Connection> returnedListOfConnections = new ArrayList<Connection>();
         for (String key : connectionList.keySet()) {
@@ -81,7 +82,7 @@ public class RegistryData implements NodeData {
         }
         return returnedListOfConnections;
     }
-    @Override
+    //@Override
     public String getLocalHost() {
         try {
             return InetAddress.getLocalHost().getHostName();
@@ -91,29 +92,74 @@ public class RegistryData implements NodeData {
         }
         return null;
     }
-    @Override
+    //@Override
     public int numberOfMessagesSent() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'numberOfMessagesSent'");
     }
-    @Override
+    //@Override
     public long summationOfSentMessages() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'summationOfSentMessages'");
     }
-    @Override
+    //@Override
     public int numberOfMessagesReceived() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'numberOfMessagesReceived'");
     }
-    @Override
+    //@Override
     public long summationOfReceivedMessages() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'summationOfReceivedMessages'");
     }
-    @Override
+    //@Override
     public int numberOfMessagesRelayed() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'numberOfMessagesRelayed'");
     }
+    //@Override
+    public void incrementMessagesSent() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'incrementMessagesSent'");
+    }
+    //@Override
+    public void addPayloadSummationOfMessagesSent(int payload) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addPayloadSummationOfMessagesSent'");
+    }
+    //@Override
+    public void incrementMessagesReceived() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'incrementMessagesReceived'");
+    }
+    //@Override
+    public void addPayloadSummationOfMessagesReceived(int payload) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addPayloadSummationOfMessagesReceived'");
+    }
+    //@Override
+    public void incrementMessagesRelayed() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'incrementMessagesRelayed'");
+    }
+    //@Override
+    public long registryGetTotalSentSummation() {
+        return summationSent;
+    }
+    //@Override
+    public void registryAddTotalSentSummation(long payload) {
+        summationSent += payload;
+    }
+    //@Override
+    public long registryGetTotalReceivedSummation() {
+        return summationReceived;
+    }
+    //@Override
+    public void registryAddTotalReceivedSummation(long payload) {
+        summationReceived += payload;
+    }
+    
+   
+    
+    
 }
