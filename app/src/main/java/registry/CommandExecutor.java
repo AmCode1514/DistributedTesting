@@ -23,6 +23,8 @@ public class CommandExecutor {
         nodeReference = data;
         overlay = data.getOverlay();
     }
+    //As a note, the portnumbers in the message headers do not need to be accurate, the registry and messenger nodes have a hashmap that can be easily used
+    //to access correct port numbers based on the name alone. This was a design oversight, and I didn't realize until later that it was unnecessary.
     public void startCommandInput() {
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(System.in));
@@ -31,8 +33,17 @@ public class CommandExecutor {
                 String[] command = reader.readLine().split(" ");
                 switch(command[0]) {
                     case "list-weights": 
+                    for (int i = 0; i < overlay.size(); ++i) {
+                        System.out.println("Current Node: " + overlay.get(i).getIP() + "\n Neighbors");
+                        for (String key : overlay.get(i).getNeighborNodesMapKeys()) {
+                            System.out.println(key + " Weight " + overlay.get(i).getLinkByIp(key).getLinkWeight());
+                        }
+                    }
                     break;
                     case "list-messaging-nodes": 
+                    for (int i = 0; i < overlay.size(); ++i) {
+                        System.out.println(overlay.get(i).getIP() + " " + overlay.get(i).getPort());
+                    }
                     break;
                     case "setup-overlay": 
                     int numberOfConnections = Integer.valueOf(command[1]);

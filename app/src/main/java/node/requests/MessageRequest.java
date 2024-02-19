@@ -47,14 +47,14 @@ public class MessageRequest extends Thread implements Event{
         ArrayList<String> mid = new ArrayList<String>(Arrays.asList(route));
         mid.remove(0);
         String[] updatedRoute = mid.toArray(new String[mid.size()]);
-        System.out.println("Original route: ");
-        for (String t : route) {
-            System.out.println(t);
-        }
-        System.out.println("New route: ");
-        for (String t : updatedRoute) {
-            System.out.println(t);
-        }
+        // System.out.println("Original route: ");
+        // for (String t : route) {
+        //     System.out.println(t);
+        // }
+        // System.out.println("New route: ");
+        // for (String t : updatedRoute) {
+        //     System.out.println(t);
+       // }
         if (updatedRoute.length == 1) {
             synchronized(data) {
                 data.incrementMessagesReceived();

@@ -10,6 +10,8 @@ import java.util.HashMap;
 
 import node.NodeData;
 import node.Overlay;
+import node.requests.NodeTrafficSummaryRequest;
+import node.requests.TrafficSummaryResponse;
 import transport.TCPReceive;
 import transport.TCPSend;
 
@@ -17,13 +19,13 @@ public class RegistryData implements NodeData {
     Connection registry;
     Overlay overlay = new Overlay();
     HashMap<String,Connection> connectionList = new HashMap<String,Connection>();
+    ArrayList<NodeTrafficData> dataReports = new ArrayList<NodeTrafficData>();
     TCPSend sender = new TCPSend();
-    int numberOfMessagesReceived = 0;
-    long summationOfMessagesSent;
-    int numberOfMessagesSent;
     Server primaryServerInstance;
+
     long summationReceived = 0;
     long summationSent = 0;
+    volatile int nodesFinished = 0;
     public RegistryData() {
 
     }
@@ -147,16 +149,47 @@ public class RegistryData implements NodeData {
         return summationSent;
     }
     //@Override
-    public void registryAddTotalSentSummation(long payload) {
+    public synchronized void registryAddTotalSentSummation(long payload) {
         summationSent += payload;
     }
     //@Override
-    public long registryGetTotalReceivedSummation() {
+    public synchronized long registryGetTotalReceivedSummation() {
         return summationReceived;
     }
     //@Override
     public void registryAddTotalReceivedSummation(long payload) {
         summationReceived += payload;
+    }
+    @Override
+    public synchronized void addTrafficData(NodeTrafficData data) {
+        dataReports.add(data);
+        if (dataReports.size() == overlay.size()) {
+            int numberOfMessagesSent = 0;
+            int numberOfMessagesReceived = 0;
+            for(NodeTrafficData trafficData : dataReports) {
+                numberOfMessagesSent += trafficData.numberOfMessagesSent;
+                numberOfMessagesReceived += trafficData.numberOfMessagesReceived;
+                System.out.println(String.format("Node: %s Sent Messages: %s Received Messages: %s Sum of Sent Messages: %s Sum of Received Messages: %s Relayed Messages: %s", trafficData.ipAddress, trafficData.numberOfMessagesSent, trafficData.numberOfMessagesReceived, trafficData.summationOfMessagesSent, trafficData.summationOfReceivedMessages, trafficData.numberOfMessagesRelayed));
+            }
+            System.out.println(String.format("SUMS: Messages sent: %s Messages Received: %s Sums Of Sent: %s Sums of received: %s", numberOfMessagesSent, numberOfMessagesReceived, registryGetTotalSentSummation(), registryGetTotalReceivedSummation()));
+            summationReceived = 0;
+            summationSent = 0;
+            dataReports.clear();
+        }
+    }
+    @Override
+    public synchronized boolean checkRoundsFinished() {
+        ++nodesFinished;
+        if (nodesFinished == overlay.size()) {
+            nodesFinished = 0;
+            return true;
+        }
+        return false;
+    }
+    @Override
+    public void clearTrafficStats() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'clearTrafficStats'");
     }
     
    

@@ -43,7 +43,7 @@ public class EventHandler extends Thread {
                     eventList.wait();
                     // while the list isn't empty then process event and remove it from list.
                     while(eventList.size() != 0) {
-                        System.out.println("Handled event:");
+                        System.out.println("Handled event: ");
                         eventList.pop().start();
                     }
                 }

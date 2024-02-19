@@ -59,12 +59,26 @@ public class StartRequest extends Thread implements Event {
                 synchronized(data) {
                     Connection nextNodeConnection = data.getConnection(path[1]);
                     int payload = rand.nextInt(Integer.MAX_VALUE - 1);
+                    if (rand.nextInt(2) == 1) {
+                        payload = payload * -1;
+                    }
                     MessageRequest req = new MessageRequest(8, data.getLocalHost(), nextNodeConnection.getPortNumber(), actualPath, payload);
                     data.getTCPSend().sendEvent(req, nextNodeConnection);
                     data.addPayloadSummationOfMessagesSent(payload);
                     data.incrementMessagesSent();
                 }
             }
+        }
+        // try {
+        // sleep(5000);
+        // }
+        // catch(Exception e) {
+        // }
+        synchronized(data) {
+            NodeFinished req = new NodeFinished(9, data.getLocalHost(), portNumber, data);
+            Connection registry = data.getRegistry();
+            data.getTCPSend().sendEvent(req, registry);
+
         }
     }
     @Override
