@@ -25,7 +25,7 @@ public class RegistryData implements NodeData {
 
     long summationReceived = 0;
     long summationSent = 0;
-    int nodesFinished = 0;
+    volatile int nodesFinished = 0;
     public RegistryData() {
 
     }
