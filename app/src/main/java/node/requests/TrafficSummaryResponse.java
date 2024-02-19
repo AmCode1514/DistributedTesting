@@ -9,6 +9,7 @@ import java.io.IOException;
 
 import node.Event;
 import node.NodeData;
+import registry.NodeTrafficData;
 public class TrafficSummaryResponse extends Thread implements Event {
 
     private final int requestType;
@@ -45,11 +46,20 @@ public class TrafficSummaryResponse extends Thread implements Event {
         return requestType;
     }
     public void OnEvent() {
-        System.out.println(String.format("Node IP: %s \n Node Port: %s \n Number of Messages Sent %s \n Summation Of Sent Messages: %s \n Number of Messages Received: %s \n Summation Of Received Messages: %s \n Number Of Relayed Messages: %s \n\n\n\n",ipAddress, portNumber, numberOfMessagesSent, summationOfMessagesSent, numberOfMessagesReceived, summationOfReceivedMessages, numberOfMessagesRelayed));
+        NodeTrafficData traffic = new NodeTrafficData(requestType, ipAddress, portNumber, numberOfMessagesSent, summationOfMessagesSent, numberOfMessagesReceived, summationOfReceivedMessages, numberOfMessagesRelayed);
+        System.out.println("Received traffic summary response Ip: " + ipAddress + " number of messages received " + numberOfMessagesReceived );
         synchronized(data) {
-            data.registryAddTotalSentSummation(summationOfMessagesSent);
             data.registryAddTotalReceivedSummation(summationOfReceivedMessages);
+            data.registryAddTotalSentSummation(summationOfMessagesSent);
+            data.addTrafficData(traffic);
         }
+        
+        
+        // System.out.println(String.format("Node IP: %s \n Node Port: %s \n Number of Messages Sent %s \n Summation Of Sent Messages: %s \n Number of Messages Received: %s \n Summation Of Received Messages: %s \n Number Of Relayed Messages: %s \n\n\n\n",ipAddress, portNumber, numberOfMessagesSent, summationOfMessagesSent, numberOfMessagesReceived, summationOfReceivedMessages, numberOfMessagesRelayed));
+        // synchronized(data) {
+        //     data.registryAddTotalSentSummation(summationOfMessagesSent);
+        //     data.registryAddTotalReceivedSummation(summationOfReceivedMessages);
+        // }
     }
     @Override
     public byte[] reMarshallToBasic() {

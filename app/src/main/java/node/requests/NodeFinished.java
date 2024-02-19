@@ -9,13 +9,13 @@ import node.NodeData;
 import node.RegisteredNodeData;
 import transport.Connection;
 
-public class NodeTrafficSummaryRequest extends Thread implements Event {
+public class NodeFinished extends Thread implements Event {
     private final int requestType;
     private final String ipAddress;
     private final int portNumber;
     NodeData data;
     
-    public NodeTrafficSummaryRequest(int requestType, String ipAddress, int portNumber, NodeData data) {
+    public NodeFinished(int requestType, String ipAddress, int portNumber, NodeData data) {
         this.requestType = requestType;
         this. ipAddress = ipAddress;
         this.portNumber = portNumber;
@@ -27,14 +27,16 @@ public class NodeTrafficSummaryRequest extends Thread implements Event {
         return requestType;
     }
     //do something, potentially create new request and send
+    @Override
     public void OnEvent() {
-        System.out.println("Received traffic summary request");
-        synchronized(data) {
-        Connection conn = data.getConnection(ipAddress);
-        TrafficSummaryResponse response = new TrafficSummaryResponse(6,data.getLocalHost(), data.getServer().getServerPort(), data.numberOfMessagesSent(), data.summationOfSentMessages(), data.numberOfMessagesReceived(), data.summationOfReceivedMessages(), data.numberOfMessagesRelayed());
-        data.getTCPSend().sendEvent(response, conn);
-        data.clearTrafficStats();
+        synchronized (data) {
+        if(data.checkRoundsFinished()) {
+            for (Connection conn : data.getAllConnections()) {
+                NodeTrafficSummaryRequest req = new NodeTrafficSummaryRequest(5, data.getLocalHost(), 5000, data);
+                data.getTCPSend().sendEvent(req, conn);
+            }
         }
+    }
     }
     @Override
     public byte[] reMarshallToBasic() {
@@ -49,7 +51,7 @@ public class NodeTrafficSummaryRequest extends Thread implements Event {
         return marshalledBytes;
         }
         catch (IOException e) {
-            System.out.println("Issue converting Traffic Summary request into byte array");
+            System.out.println("Issue converting registration request into byte array");
             e.printStackTrace();
             return null;
         }

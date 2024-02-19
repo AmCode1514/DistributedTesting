@@ -10,6 +10,7 @@ import java.util.HashMap;
 
 import node.NodeData;
 import node.Overlay;
+import registry.NodeTrafficData;
 import transport.TCPSend;
 
 public class MessengerData implements NodeData {
@@ -160,5 +161,23 @@ public class MessengerData implements NodeData {
     public void registryAddTotalReceivedSummation(long pay) {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'registryAddTotalReceivedSummation'");
+    }
+    @Override
+    public void addTrafficData(NodeTrafficData data) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'addTrafficData'");
+    }
+    @Override
+    public boolean checkRoundsFinished() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'checkRoundsFinished'");
+    }
+    @Override
+    public void clearTrafficStats() {
+        numberOfMessagesSent = 0;
+        summationOfMessagesSent = 0;
+        numberOfMessagesReceived = 0;
+        summationOfReceivedMessages = 0;
+        numberOfMessagesRelayed = 0;
     }
 }

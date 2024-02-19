@@ -23,6 +23,8 @@ public class CommandExecutor {
         nodeReference = data;
         overlay = data.getOverlay();
     }
+    //As a note, the portnumbers in the message headers do not need to be accurate, the registry and messenger nodes have a hashmap that can be easily used
+    //to access correct port numbers based on the name alone. This was a design oversight, and I didn't realize until later that it was unnecessary.
     public void startCommandInput() {
         BufferedReader reader = new BufferedReader(
             new InputStreamReader(System.in));

@@ -5,6 +5,8 @@ import transport.TCPSend;
 
 import java.util.ArrayList;
 
+import node.requests.TrafficSummaryResponse;
+import registry.NodeTrafficData;
 import transport.Connection;
 import transport.Server;
 
@@ -35,4 +37,7 @@ public interface NodeData {
     public void registryAddTotalSentSummation(long pay);
     public long registryGetTotalReceivedSummation();
     public void registryAddTotalReceivedSummation(long pay);
+    public void addTrafficData(NodeTrafficData data);
+    public boolean checkRoundsFinished();
+    public void clearTrafficStats();
 }
