@@ -33,8 +33,17 @@ public class CommandExecutor {
                 String[] command = reader.readLine().split(" ");
                 switch(command[0]) {
                     case "list-weights": 
+                    for (int i = 0; i < overlay.size(); ++i) {
+                        System.out.println("Current Node: " + overlay.get(i).getIP() + "\n Neighbors");
+                        for (String key : overlay.get(i).getNeighborNodesMapKeys()) {
+                            System.out.println(key + " Weight " + overlay.get(i).getLinkByIp(key).getLinkWeight());
+                        }
+                    }
                     break;
                     case "list-messaging-nodes": 
+                    for (int i = 0; i < overlay.size(); ++i) {
+                        System.out.println(overlay.get(i).getIP() + " " + overlay.get(i).getPort());
+                    }
                     break;
                     case "setup-overlay": 
                     int numberOfConnections = Integer.valueOf(command[1]);

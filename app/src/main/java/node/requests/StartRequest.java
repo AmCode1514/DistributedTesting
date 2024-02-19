@@ -69,11 +69,11 @@ public class StartRequest extends Thread implements Event {
                 }
             }
         }
-        try {
-        sleep(5000);
-        }
-        catch(Exception e) {
-        }
+        // try {
+        // sleep(5000);
+        // }
+        // catch(Exception e) {
+        // }
         synchronized(data) {
             NodeFinished req = new NodeFinished(9, data.getLocalHost(), portNumber, data);
             Connection registry = data.getRegistry();

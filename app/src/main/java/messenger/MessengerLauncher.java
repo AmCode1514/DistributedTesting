@@ -30,6 +30,8 @@ public class MessengerLauncher {
         RegistrationRequest init = new RegistrationRequest(1, serverReference.getServerIpAddress(), serverReference.getServerPort(), messenger);
         System.out.println("Messenger launcher server ip:" + serverReference.getServerIpAddress());
         messenger.getTCPSend().sendEvent(init, messenger.getRegistry());
+        MessengerCommandExecutor exec = new MessengerCommandExecutor(messenger);
+        exec.startCommandInput();
         }
         catch(IOException e) {
             e.printStackTrace();

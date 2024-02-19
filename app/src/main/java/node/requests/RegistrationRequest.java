@@ -46,7 +46,7 @@ public class RegistrationRequest extends Thread implements Event {
         synchronized(data) {
         RegisteredNodeData nodeDataForOverlay = new RegisteredNodeData(conn, ipAddress, portNumber);
         data.getOverlay().addRegisteredNode(nodeDataForOverlay);
-        RegistrationResponse response = new RegistrationResponse(2, conn.getIPAddress(), conn.getPortNumber(), statusCode, additionalInformation);
+        RegistrationResponse response = new RegistrationResponse(2, data.getLocalHost(), conn.getPortNumber(), statusCode, additionalInformation);
         data.getTCPSend().sendEvent(response, conn);
         }
     }

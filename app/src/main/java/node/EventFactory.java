@@ -55,6 +55,8 @@ public class EventFactory {
             case 7: return new StartRequest(requestType, ipAddress, portNumber, remainingData, data);
             case 8: return new MessageRequest(requestType, ipAddress, portNumber, remainingData, data);
             case 9: return new NodeFinished(requestType, ipAddress, portNumber, data);
+            case 10: return new DeregisterRequest(requestType, ipAddress, portNumber, data);
+            case 11: return new DeregisterResponse(requestType, ipAddress, portNumber, remainingData, data);
         }
         return null;
     }
